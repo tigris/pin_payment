@@ -23,9 +23,9 @@ customer in future (e.g. recurring billing, where writing the background
 task is up to you), if you are only doing a single transaction, this step is
 not required (but recommended).
 
-```ruby
-  customer = Pin::Customer.create(email: 'foo@example.com', card_token: params[:card_token])
-```
+    ```ruby
+    customer = Pin::Customer.create(email: 'foo@example.com', card_token: params[:card_token])
+    ```
 
 The important information from the returned object is `customer.token`. You
 will need this for future billing. Store it in your own application
@@ -33,20 +33,20 @@ somewhere.
 
 Now you can create charges.
 
-```ruby
-  charge = Pin::Charge.create(
-    customer_token: customer.token, # you can optionally pass a card_token instead
-    email:          customer.email,
-    amount:         1000,
-    currency:       'USD',
-    description:    'Widgets'
-    ip_address:     request.ip
-  )
+    ```ruby
+    charge = Pin::Charge.create(
+      customer_token: customer.token, # you can optionally pass a card_token instead
+      email:          customer.email,
+      amount:         1000,
+      currency:       'USD',
+      description:    'Widgets',
+      ip_address:     request.ip
+    )
 
-  if charge.success?
-    # You would now store charge.token as a reference for this payment
-  end
-```
+    if charge.success?
+      # You would now store charge.token as a reference for this payment
+    end
+    ```
 
 ## TODO
 
