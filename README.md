@@ -18,6 +18,18 @@ Or clone the repo and build them gem yourself:
 
 ## Usage
 
+First you will need to set your `public_key`, `secret_key`, and the `api_url`.
+These can be found on your pin.net.au dashboard (under the "Account" section).
+If you're using rails, this is best done in an initializer such as
+`config/initializers/pin.rb`, and you will need different keys for different
+environments, e.g. wrap them around `if Rails.env.development?`.
+
+```ruby
+Pin.public_key = 'super nintendo chalmers'
+Pin.secret_key = 'purple monkey dishwasher'
+Pin.api_url    = 'http://api.pin.net.au' # Live endpoint, the default is the test endpoint
+```
+
 Creating the customer on pin.net.au is only required if you want to bill the
 customer in future (e.g. recurring billing, where writing the background
 task is up to you), if you are only doing a single transaction, this step is
