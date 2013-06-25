@@ -4,17 +4,22 @@ require 'pin_payment/error'
 module PinPayment
   class Base
 
+    def initialize token, options = {}
+      self.token = token
+      options.each{|k,v| send("#{k}=", v) if self.class::ATTRIBUTES.include?(k.to_sym) }
+    end
+
     protected
 
-    def self.post uri, options
+    def self.post uri, options = {}
       fetch Net::HTTP::Post, uri, options
     end
 
-    def self.put uri, options
+    def self.put uri, options = {}
       fetch Net::HTTP::Put, uri, options
     end
 
-    def self.get uri, options
+    def self.get uri, options = {}
       fetch Net::HTTP::Get, uri, options
     end
 
@@ -36,7 +41,10 @@ module PinPayment
         raise Error::InvalidResponse.new(e.message)
       end
       raise(Error.create(response['error'], response['error_description'], response['messages'])) if response['error']
-      response['response']
+      response = response['response']
+      card     = response.delete('card')
+      response['card_token'] = card['token'] if card
+      response
     end
 
   end

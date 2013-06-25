@@ -41,6 +41,7 @@ class TestPinCustomer < MiniTest::Unit::TestCase
   def test_object_update
     FakeWeb.register_uri(:get, 'https://test-api.pin.net.au/1/customers/cus__03Cn1lSk3offZ0IGkwpCg', body: fixtures['responses']['customer']['created'])
     customer = PinPayment::Customer.find('cus__03Cn1lSk3offZ0IGkwpCg')
+    assert_equal customer.email, 'foo@example.com'
 
     FakeWeb.register_uri(:put, 'https://test-api.pin.net.au/1/customers/cus__03Cn1lSk3offZ0IGkwpCg', body: fixtures['responses']['customer']['updated'])
     customer.update(email: 'changed@example.com')

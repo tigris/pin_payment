@@ -9,14 +9,14 @@ class TestPinRefund < MiniTest::Unit::TestCase
     token = 'ch_BjGW-S6WUisI6mOgpDRimg'
     FakeWeb.register_uri(:post, "https://test-api.pin.net.au/1/charges/#{token}/refunds", body: fixtures['responses']['refund']['duplicate'])
     assert_raises PinPayment::Error::InvalidResource do
-      PinPayment::Refund.create(charge_token: token)
+      PinPayment::Refund.create(token)
     end
   end
 
   def test_direct_refund
     token = 'ch_BjGW-S6WUisI6mOgpDRimg'
     FakeWeb.register_uri(:post, "https://test-api.pin.net.au/1/charges/#{token}/refunds", body: fixtures['responses']['refund']['success'])
-    refund = PinPayment::Refund.create(charge_token: token)
+    refund = PinPayment::Refund.create(token)
     assert_equal 'Pending', refund.status
   end
 

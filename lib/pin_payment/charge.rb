@@ -1,30 +1,24 @@
 module PinPayment
   class Charge < Base
-    attr_reader :token, :amount, :currency, :description, :email, :ip_address, :created_at, :card_token
+    ATTRIBUTES = [:token, :amount, :currency, :description, :email, :ip_address, :created_at, :card_token, :customer_token, :success]
+    attr_accessor *ATTRIBUTES
+    protected     *ATTRIBUTES.map{|x| "#{x}=" }
 
     def self.create options
-      response = self.post(
+      options = options.reject{|x| x == 'token' } # field not allowed during create
+      response = post(
         URI.parse(PinPayment.api_url).tap{|uri| uri.path = '/1/charges' },
-        options.select{|k| %w(amount currency description email ip_address card_token customer_token).include?(k.to_s) }
+        options.select{|k| ATTRIBUTES.include?(k.to_s) }
       )
-      self.new.tap do |charge|
-        charge.instance_variable_set('@card_token', response['card']['token']) if response['card']
-        %w(token amount currency description email ip_address created_at error_message success).each do |key|
-          charge.instance_variable_set("@#{key}", response[key])
-        end
-      end
+      new(response.delete('token'), response)
     end
 
     def refund!
-      Refund.create(charge_token: token)
+      Refund.create token
     end
 
     def success?
-      @success == true
-    end
-
-    def errors
-      @error_message
+      success == true
     end
   end
 end

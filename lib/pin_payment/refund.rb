@@ -1,17 +1,12 @@
 module PinPayment
   class Refund < Base
-    attr_reader :token, :amount, :currency, :charge_token, :created_at
+    ATTRIBUTES = [:token, :amount, :currency, :charge_token, :created_at, :status_message].freeze
+    attr_accessor *ATTRIBUTES
+    protected     *ATTRIBUTES.map{|x| "#{x}".to_sym }
 
-    def self.create options
-      response = self.post(
-        URI.parse(PinPayment.api_url).tap{|uri| uri.path = "/1/charges/#{options[:charge_token] || options['charge_token']}/refunds" },
-        {}
-      )
-      self.new.tap do |charge|
-        %w(token amount currency created_at error_message status_message).each do |key|
-          charge.instance_variable_set("@#{key}", response[key])
-        end
-      end
+    def self.create token
+      response = post(URI.parse(PinPayment.api_url).tap{|uri| uri.path = "/1/charges/#{token}/refunds" })
+      new(response.delete('token'), response)
     end
 
     # TODO: API documentation only shows success as being "null" in the JSON
@@ -22,11 +17,7 @@ module PinPayment
     end
 
     def status
-      @status_message
-    end
-
-    def errors
-      @error_message
+      status_message
     end
   end
 end
