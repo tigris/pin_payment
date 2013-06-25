@@ -1,4 +1,4 @@
-module Pin
+module PinPayment
   module Version
     MAJOR = 0
     MINOR = 0

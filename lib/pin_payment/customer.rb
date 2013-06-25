@@ -1,10 +1,10 @@
-module Pin
+module PinPayment
   class Customer < Base
     attr_reader :token, :email, :created_at, :card_token
 
     def self.create options
       response = post(
-        URI.parse(Pin.api_url).tap{|uri| uri.path = '/1/customers' },
+        URI.parse(PinPayment.api_url).tap{|uri| uri.path = '/1/customers' },
         options.select{|k| %w(email card_token).include?(k.to_s) }
       )
       new.tap do |customer|
@@ -18,7 +18,7 @@ module Pin
     def self.update options
       # PUT /1/customers/cus_XZg1ULpWaROQCOT5PdwLkQ
       response = put(
-        URI.parse(Pin.api_url).tap{|uri| uri.path = "/1/customers/#{options[:token] || options['token']}" },
+        URI.parse(PinPayment.api_url).tap{|uri| uri.path = "/1/customers/#{options[:token] || options['token']}" },
         options.select{|k| %w(email card_token).include?(k.to_s) }
       )
       new.tap do |customer|

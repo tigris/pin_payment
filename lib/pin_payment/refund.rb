@@ -1,10 +1,10 @@
-module Pin
+module PinPayment
   class Refund < Base
     attr_reader :token, :amount, :currency, :charge_token, :created_at
 
     def self.create options
       response = self.post(
-        URI.parse(Pin.api_url).tap{|uri| uri.path = "/1/charges/#{options[:charge_token] || options['charge_token']}/refunds" },
+        URI.parse(PinPayment.api_url).tap{|uri| uri.path = "/1/charges/#{options[:charge_token] || options['charge_token']}/refunds" },
         {}
       )
       self.new.tap do |charge|

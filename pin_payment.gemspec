@@ -1,10 +1,10 @@
 $:.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
-require 'pin/version'
+require 'pin_payment/version'
 
 spec = Gem::Specification.new do |s|
-  s.name        = 'pin'
-  s.version     = Pin::Version::STRING
+  s.name        = 'pin_payment'
+  s.version     = PinPayment::Version::STRING
   s.summary     = 'Ruby bindings for the Pin API'
   s.description = 'Pin is the easiest way to accept payments online.  See https://pin.net.au/ for details.'
   s.authors     = ['Danial Pearce']

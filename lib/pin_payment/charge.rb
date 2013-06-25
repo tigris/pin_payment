@@ -1,10 +1,10 @@
-module Pin
+module PinPayment
   class Charge < Base
     attr_reader :token, :amount, :currency, :description, :email, :ip_address, :created_at, :card_token
 
     def self.create options
       response = self.post(
-        URI.parse(Pin.api_url).tap{|uri| uri.path = '/1/charges' },
+        URI.parse(PinPayment.api_url).tap{|uri| uri.path = '/1/charges' },
         options.select{|k| %w(amount currency description email ip_address card_token customer_token).include?(k.to_s) }
       )
       self.new.tap do |charge|

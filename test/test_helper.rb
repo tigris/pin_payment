@@ -1,6 +1,6 @@
 require 'fakeweb'
 require 'minitest/autorun'
-require 'pin'
+require 'pin_payment'
 require 'yaml'
 
 def fixtures

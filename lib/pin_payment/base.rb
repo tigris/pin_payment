@@ -1,7 +1,7 @@
 require 'json'
-require 'pin/error'
+require 'pin_payment/error'
 
-module Pin
+module PinPayment
   class Base
 
     protected
@@ -25,8 +25,8 @@ module Pin
       client.verify_mode = OpenSSL::SSL::VERIFY_PEER
       response           = client.request(
         klass.new(uri.request_uri).tap do |http|
-          http.basic_auth(Pin.secret_key, '')
-          http['User-Agent'] = "#{self}/#{Pin::Version::STRING}"
+          http.basic_auth(PinPayment.secret_key, '')
+          http['User-Agent'] = "#{self}/#{PinPayment::Version::STRING}"
           http.set_form_data options
         end
       )

@@ -1,13 +1,11 @@
-# TODO: Convert to a gem
+require 'pin_payment/base'
+require 'pin_payment/charge'
+require 'pin_payment/customer'
+require 'pin_payment/error'
+require 'pin_payment/refund'
+require 'pin_payment/version'
 
-require 'pin/base'
-require 'pin/charge'
-require 'pin/customer'
-require 'pin/error'
-require 'pin/refund'
-require 'pin/version'
-
-module Pin
+module PinPayment
   @@api_url    = 'https://test-api.pin.net.au'
   @@secret_key = nil
   @@public_key = nil

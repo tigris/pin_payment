@@ -1,4 +1,4 @@
-module Pin
+module PinPayment
   class Error < Exception
 
     def self.create type, description, messages = nil
