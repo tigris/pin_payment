@@ -30,5 +30,10 @@ module PinPayment
       new(response.delete('token'), response)
     end
 
+    def self.all # TODO: pagination
+      response = get(URI.parse(PinPayment.api_url).tap{|uri| uri.path = '/1/customers' })
+      response.map{|x| new(x.delete('token'), x) }
+    end
+
   end
 end

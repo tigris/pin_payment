@@ -42,9 +42,14 @@ module PinPayment
       end
       raise(Error.create(response['error'], response['error_description'], response['messages'])) if response['error']
       response = response['response']
-      card     = response.delete('card')
-      response['card_token'] = card['token'] if card
+      response.is_a?(Hash) ? fix_card_data(response) : response.each{|x| fix_card_data(x) }
       response
+    end
+
+    def self.fix_card_data(hash)
+      card = hash.delete('card')
+      hash['card_token'] = card['token'] if card
+      hash
     end
 
   end
