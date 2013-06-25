@@ -12,8 +12,8 @@ module Pin
       klass.new(description)
     end
 
-    class InvalidReponse < Error; end
-    class InvalidResource < Error; end
+    class InvalidResponse  < Error; end
+    class InvalidResource  < Error; end
     class ResourceNotFound < Error; end
     class TokenAlreadyUsed < Error; end
 
