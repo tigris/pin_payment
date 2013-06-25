@@ -15,6 +15,10 @@ module Pin
       end
     end
 
+    def refund!
+      Refund.create(charge_token: token)
+    end
+
     def success?
       @success == true
     end

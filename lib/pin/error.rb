@@ -8,7 +8,11 @@ module Pin
         when 'resource_not_found'; ResourceNotFound
         else self
       end
-      description = description + ' ' + messages.map{|x| "(#{x['message']})" }.join(' & ') if messages
+      if messages.is_a?(Array)
+        description = description + ' ' + messages.map{|x| "(#{x['message']})" }.join(' & ')
+      elsif messages.is_a?(Hash)
+        description = description + ' ' + messages.values.flatten.map{|x| "(#{x})" }.join(' & ')
+      end
       klass.new(description)
     end
 

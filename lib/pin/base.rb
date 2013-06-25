@@ -1,4 +1,5 @@
 require 'json'
+require 'pin/error'
 
 module Pin
   class Base

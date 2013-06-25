@@ -4,6 +4,7 @@ require 'pin/base'
 require 'pin/charge'
 require 'pin/customer'
 require 'pin/error'
+require 'pin/refund'
 require 'pin/version'
 
 module Pin
