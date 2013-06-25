@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pin_payment (0.0.4)
+    pin_payment (0.0.5)
 
 GEM
   remote: https://rubygems.org/

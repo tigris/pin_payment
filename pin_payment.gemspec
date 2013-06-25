@@ -9,6 +9,7 @@ spec = Gem::Specification.new do |s|
   s.description = 'Pin is the easiest way to accept payments online.  See https://pin.net.au/ for details.'
   s.authors     = ['Danial Pearce']
   s.email       = ['git@tigris.id.au']
+  s.licenses    = ['MIT']
   s.homepage    = 'https://github.com/tigris/pin_payment'
 
   s.add_development_dependency('fakeweb')
