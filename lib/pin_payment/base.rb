@@ -6,7 +6,7 @@ module PinPayment
 
     def initialize token, options = {}
       self.token = token
-      self.class.parse_card_data(options).each{|k,v| send("#{k}=", v) if self.class::ATTRIBUTES.include?(k.to_sym) }
+      self.class.parse_card_data(options).each{|k,v| send("#{k}=", v) if self.class.attributes.include?(k.to_sym) }
     end
 
     protected
