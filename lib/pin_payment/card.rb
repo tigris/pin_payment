@@ -25,11 +25,12 @@ module PinPayment
       new(response.delete('token'), response)
     end
 
-    protected
-
+    # @return [Hash]
     def to_hash
-      {}.tap{|h| self.class.attributes.each{|k| v = send(k) && h[k] = v }}
+      {}.tap{|h| self.class.attributes.each{|k| v = send(k) ; h[k] = v if v }}
     end
+
+    protected
 
     def self.attributes
       [:token, :display_number, :scheme, :address_line1, :address_line2, :address_city, :address_postcode, :address_state, :address_country]
