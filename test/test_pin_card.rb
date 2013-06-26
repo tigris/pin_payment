@@ -31,4 +31,9 @@ class TestPinCard < MiniTest::Unit::TestCase
       PinPayment::Card.create(@card_hash.merge(number: 5520000000000099))
     end
   end
+
+  def test_new_from_hash
+    card = PinPayment::Card.new(nil, @card_hash)
+    assert_equal @card_hash[:address_country], card.address_country
+  end
 end
