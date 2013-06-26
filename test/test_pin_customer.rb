@@ -8,14 +8,7 @@ class TestPinCustomer < MiniTest::Unit::TestCase
   def test_update_with_blank_email
     FakeWeb.register_uri(:put, 'https://test-api.pin.net.au/1/customers/cus__03Cn1lSk3offZ0IGkwpCg', body: fixtures['responses']['customer']['blank_email'])
     assert_raises PinPayment::Error::InvalidResource do
-      PinPayment::Customer.update(token: 'cus__03Cn1lSk3offZ0IGkwpCg', email: nil)
-    end
-  end
-
-  def test_update_with_blank_token
-    FakeWeb.register_uri(:put, 'https://test-api.pin.net.au/1/customers/', body: fixtures['responses']['customer']['blank_token'])
-    assert_raises PinPayment::Error::ResourceNotFound do
-      PinPayment::Customer.update(email: 'foo@example.com')
+      PinPayment::Customer.update('cus__03Cn1lSk3offZ0IGkwpCg', nil)
     end
   end
 
@@ -34,7 +27,7 @@ class TestPinCustomer < MiniTest::Unit::TestCase
 
   def test_direct_update
     FakeWeb.register_uri(:put, 'https://test-api.pin.net.au/1/customers/cus__03Cn1lSk3offZ0IGkwpCg', body: fixtures['responses']['customer']['updated'])
-    customer = PinPayment::Customer.update(token: 'cus__03Cn1lSk3offZ0IGkwpCg', email: 'changed@example.com')
+    customer = PinPayment::Customer.update('cus__03Cn1lSk3offZ0IGkwpCg', 'changed@example.com')
     assert_equal 'changed@example.com', customer.email
   end
 
@@ -44,7 +37,7 @@ class TestPinCustomer < MiniTest::Unit::TestCase
     assert_equal 'foo@example.com', customer.email
 
     FakeWeb.register_uri(:put, 'https://test-api.pin.net.au/1/customers/cus__03Cn1lSk3offZ0IGkwpCg', body: fixtures['responses']['customer']['updated'])
-    customer.update(email: 'changed@example.com')
+    customer.update('changed@example.com')
     assert_equal 'changed@example.com', customer.email
   end
 

@@ -1,4 +1,5 @@
 require 'pin_payment/base'
+require 'pin_payment/card'
 require 'pin_payment/charge'
 require 'pin_payment/customer'
 require 'pin_payment/error'

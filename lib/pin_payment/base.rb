@@ -6,7 +6,7 @@ module PinPayment
 
     def initialize token, options = {}
       self.token = token
-      options.each{|k,v| send("#{k}=", v) if self.class::ATTRIBUTES.include?(k.to_sym) }
+      self.class.parse_card_data(options).each{|k,v| send("#{k}=", v) if self.class::ATTRIBUTES.include?(k.to_sym) }
     end
 
     protected
@@ -42,14 +42,34 @@ module PinPayment
       end
       raise(Error.create(response['error'], response['error_description'], response['messages'])) if response['error']
       response = response['response']
-      response.is_a?(Hash) ? fix_card_data(response) : response.each{|x| fix_card_data(x) }
-      response
+      response.is_a?(Hash) ? parse_card_data(response) : response.map{|x| parse_card_data(x) }
     end
 
-    def self.fix_card_data(hash)
-      card = hash.delete('card')
-      hash['card_token'] = card['token'] if card
+    def self.parse_card_data hash
+      hash  = hash.dup
+      card  = hash.delete('card') if hash['card']
+      card  = hash.delete(:card)  if hash[:card]
+      token = hash.delete('card_token') if hash['card_token']
+      token = hash.delete(:card_token)  if hash[:card_token]
+      if card.is_a?(Card)
+        card.token = token if token and !card.token
+      elsif card.is_a?(Hash)
+        card = Card.new(token || card[:token] || card['token'], card)
+      elsif card.is_a?(String)
+        card = Card.new(card)
+      elsif token
+        card = Card.new(token)
+      end
       hash
+    end
+
+    def self.parse_options_for_request attributes, options
+      attributes = attributes.map(&:to_s)
+      options    = parse_card_data(options.select{|k| attributes.include?(k.to_s) })
+      card       = options.delete(:card) || options.delete('card')
+      options.delete('card')
+      return options unless card
+      card.token ? options.merge(card_token: card.token) : options.merge(card: card.to_hash)
     end
 
   end

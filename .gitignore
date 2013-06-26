@@ -2,3 +2,5 @@
 /gems
 /pkg
 *.swp
+/.yardoc
+/doc
