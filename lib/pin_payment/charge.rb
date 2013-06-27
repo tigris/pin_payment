@@ -34,7 +34,7 @@ module PinPayment
     #
     # @return [PinPayment::Refund]
     def refund!
-      Refund.create token
+      Refund.create self
     end
 
     # @return [Boolean]
