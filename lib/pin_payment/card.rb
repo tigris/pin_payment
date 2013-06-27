@@ -3,6 +3,10 @@ module PinPayment
     attr_accessor :token,  :display_number,  :scheme,  :address_line1,  :address_line2,  :address_city,  :address_postcode,  :address_state,  :address_country
     protected     :token=, :display_number=, :scheme=, :address_line1=, :address_line2=, :address_city=, :address_postcode=, :address_state=, :address_country=
 
+    attr_accessor :number,  :expiry_month,  :expiry_year,  :cvc,  :name
+    protected     :number,  :expiry_month,  :expiry_year,  :cvc,  :name
+    protected     :number=, :expiry_month=, :expiry_year=, :cvc=, :name=
+
     # Use the pin API to create a credit card token, usable for 1 month from creation.
     #
     # @param [Hash] card_data
@@ -20,7 +24,6 @@ module PinPayment
     def self.create card_data
       attributes = self.attributes - [:token, :display_number, :scheme] # fix attributes allowed by POST API
       options    = parse_options_for_request(attributes, card_data)
-      [:number, :expiry_month, :expiry_year, :cvc, :name].each{|k| options[k] = card_data[k] || card_data[k.to_s] }
       response   = post(URI.parse(PinPayment.api_url).tap{|uri| uri.path = '/1/cards' }, options)
       new(response.delete('token'), response)
     end
@@ -33,7 +36,7 @@ module PinPayment
     protected
 
     def self.attributes
-      [:token, :display_number, :scheme, :address_line1, :address_line2, :address_city, :address_postcode, :address_state, :address_country]
+      [:token, :display_number, :scheme, :address_line1, :address_line2, :address_city, :address_postcode, :address_state, :address_country, :number, :expiry_month, :expiry_year, :cvc, :name]
     end
 
   end

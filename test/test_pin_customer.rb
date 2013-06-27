@@ -54,4 +54,22 @@ class TestPinCustomer < MiniTest::Unit::TestCase
     assert_kind_of PinPayment::Customer, customers.first
     assert_equal 'user1@example.com', customers.first.email
   end
+
+  def test_create_customer_with_card_hash
+    card_hash = {
+      number:           5520000000000000,
+      expiry_month:     5,
+      expiry_year:      2014,
+      cvc:              123,
+      name:             'Roland Robot',
+      address_line1:    '42 Sevenoaks St',
+      address_city:     'Lathlain',
+      address_postcode: 6454,
+      address_state:    'WA',
+      address_country:  'Australia'
+    }
+    customer = PinPayment::Customer.create('roland@pin.net.au', card_hash)
+    assert_kind_of PinPayment::Card, customer.card
+    assert_not_nil customer.card.token
+  end
 end

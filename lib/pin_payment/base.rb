@@ -23,7 +23,6 @@ module PinPayment
       fetch Net::HTTP::Get, uri, options
     end
 
-    # TODO: Accept card as a hash that would create the card at the same time as the charge
     def self.fetch klass, uri, options
       client             = Net::HTTP.new(uri.host, uri.port)
       client.use_ssl     = true
@@ -60,16 +59,20 @@ module PinPayment
       elsif token
         card = Card.new(token)
       end
+      hash['card'] = card if card
       hash
     end
 
     def self.parse_options_for_request attributes, options
       attributes = attributes.map(&:to_s)
       options    = parse_card_data(options.select{|k| attributes.include?(k.to_s) })
-      card       = options.delete(:card) || options.delete('card')
-      options.delete('card')
-      return options unless card
-      card.token ? options.merge(card_token: card.token) : options.merge(card: card.to_hash)
+      card       = options.delete('card') if options['card']
+      return options unless card and card.is_a?(Card)
+      return options.merge(card_token: card.token) if card.token
+
+      # Ruby's Net::HTTP#set_form_data doesn't deal with nested hashes :(
+      card.to_hash.each{|k,v| options["card[#{k}]"] = v }
+      options
     end
 
   end
