@@ -5,14 +5,6 @@ class TestPinCustomer < MiniTest::Unit::TestCase
     common_setup
   end
 
-  def test_update_with_blank_email
-    customer = created_customer
-    FakeWeb.register_uri(:put, "https://test-api.pin.net.au/1/customers/#{customer.token}", body: fixtures['responses']['customer']['blank_email'])
-    assert_raises PinPayment::Error::InvalidResource do
-      PinPayment::Customer.update(customer.token, nil, card_hash)
-    end
-  end
-
   def test_create_with_blank_email
     FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/customers', body: fixtures['responses']['customer']['blank_email'])
     assert_raises PinPayment::Error::InvalidResource do
