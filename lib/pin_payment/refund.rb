@@ -1,7 +1,7 @@
 module PinPayment
   class Refund < Base
-    attr_accessor :token,  :amount,  :currency,  :charge_token,  :created_at,  :status_message
-    protected     :token=, :amount=, :currency=, :charge_token=, :created_at=, :status_message=, :status_message
+    attr_accessor :token,  :amount,  :currency,  :charge,  :created_at,  :status_message
+    protected     :token=, :amount=, :currency=, :charge=, :created_at=, :status_message=, :status_message
 
     # Uses the pin API to create a refund.
     #
@@ -29,7 +29,7 @@ module PinPayment
     protected
 
     def self.attributes
-      [:token, :amount, :currency, :charge_token, :created_at, :status_message]
+      [:token, :amount, :currency, :charge, :created_at, :status_message]
     end
   end
 end

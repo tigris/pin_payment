@@ -1,18 +1,18 @@
 module PinPayment
   class Charge < Base
-    attr_accessor :token,  :amount,  :currency,  :description,  :email,  :ip_address,  :created_at,  :card,  :customer_token,  :success
-    protected     :token=, :amount=, :currency=, :description=, :email=, :ip_address=, :created_at=, :card=, :customer_token=, :success=
+    attr_accessor :token,  :amount,  :currency,  :description,  :email,  :ip_address,  :created_at,  :card,  :customer,  :success
+    protected     :token=, :amount=, :currency=, :description=, :email=, :ip_address=, :created_at=, :card=, :customer=, :success=
 
     # Uses the pin API to create a charge.
     #
     # @param [Hash] charge_data
-    # @option charge_data [String] :amount
-    # @option charge_data [String] :currency
-    # @option charge_data [String] :email
-    # @option charge_data [String] :description
-    # @option charge_data [String] :ip_address
-    # @option charge_data [String] :customer_token
-    # @option charge_data [String,<PinPayment::Card>,Hash] :card
+    # @option charge_data [String] :amount *required*
+    # @option charge_data [String] :currency *required* only AUD and USD supported
+    # @option charge_data [String] :email *required*
+    # @option charge_data [String] :description *required*
+    # @option charge_data [String] :ip_address *required*
+    # @option charge_data [String, PinPayment::Customer] :customer can be a customer token or a customer object
+    # @option charge_data [String, PinPayment::Card, Hash] :card can be a card token, hash or a card object
     # @return [PinPayment::Charge]
     def self.create charge_data
       attributes = self.attributes - [:token, :success, :created_at] # fix attributes allowed by POST API
@@ -45,7 +45,7 @@ module PinPayment
     protected
 
     def self.attributes
-      [:token, :amount, :currency, :description, :email, :ip_address, :created_at, :card, :customer_token, :success]
+      [:token, :amount, :currency, :description, :email, :ip_address, :created_at, :card, :customer, :success]
     end
   end
 end

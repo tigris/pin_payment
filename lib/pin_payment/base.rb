@@ -41,7 +41,7 @@ module PinPayment
       end
       raise(Error.create(response['error'], response['error_description'], response['messages'])) if response['error']
       response = response['response']
-      response.is_a?(Hash) ? parse_card_data(response) : response.map{|x| parse_card_data(x) }
+      response.is_a?(Hash) ? parse_object_tokens(response) : response.map{|x| parse_object_tokens(x) }
     end
 
     def self.parse_card_data hash
@@ -50,8 +50,8 @@ module PinPayment
       card  = hash.delete(:card)  if hash[:card]
       token = hash.delete('card_token') if hash['card_token']
       token = hash.delete(:card_token)  if hash[:card_token]
-      if card.is_a?(Card)
-        card.token = token if token and !card.token
+      if card.is_a?(Card) and token and !card.token
+        card.token = token
       elsif card.is_a?(Hash)
         card = Card.new(token || card[:token] || card['token'], card)
       elsif card.is_a?(String)
@@ -63,15 +63,60 @@ module PinPayment
       hash
     end
 
+    def self.parse_customer_data hash
+      hash     = hash.dup
+      customer = hash.delete('customer') if hash['customer']
+      customer = hash.delete(:customer)  if hash[:customer]
+      token    = hash.delete('customer_token') if hash['customer_token']
+      token    = hash.delete(:customer_token)  if hash[:customer_token]
+      if customer.is_a?(Customer) and token and !customer.token
+        customer.token = token
+      elsif customer.is_a?(String)
+        customer = Customer.new(customer)
+      elsif token
+        customer = Customer.new(token)
+      end
+      hash['customer'] = customer if customer
+      hash
+    end
+
+    def self.parse_charge_data hash
+      hash   = hash.dup
+      charge = hash.delete('charge') if hash['charge']
+      charge = hash.delete(:charge)  if hash[:charge]
+      token  = hash.delete('charge_token') if hash['charge_token']
+      token  = hash.delete(:charge_token)  if hash[:charge_token]
+      if charge.is_a?(Charge) and token and !charge.token
+        charge.token = token
+      elsif charge.is_a?(String)
+        charge = Charge.new(charge)
+      elsif token
+        charge = Charge.new(token)
+      end
+      hash['charge'] = charge if charge
+      hash
+    end
+
+    def self.parse_object_tokens hash
+      parse_charge_data(parse_customer_data(parse_card_data(hash)))
+    end
+
     def self.parse_options_for_request attributes, options
       attributes = attributes.map(&:to_s)
-      options    = parse_card_data(options.select{|k| attributes.include?(k.to_s) })
-      card       = options.delete('card') if options['card']
-      return options unless card and card.is_a?(Card)
-      return options.merge(card_token: card.token) if card.token
+      options    = parse_object_tokens(options.select{|k| attributes.include?(k.to_s) })
 
-      # Ruby's Net::HTTP#set_form_data doesn't deal with nested hashes :(
-      card.to_hash.each{|k,v| options["card[#{k}]"] = v }
+      if card = options.delete('card')
+        if card.token
+          options['card_token'] = card.token
+        else
+          # Ruby's Net::HTTP#set_form_data doesn't deal with nested hashes :(
+          card.to_hash.each{|k,v| options["card[#{k}]"] = v }
+        end
+      end
+
+      options['customer_token'] = options.delete('customer').token if options['customer']
+      options['charge_token']   = options.delete('charge').token   if options['charge']
+
       options
     end
 
