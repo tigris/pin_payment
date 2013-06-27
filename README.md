@@ -34,7 +34,7 @@ task is up to you), if you are only doing a single transaction, this step is
 not required (but recommended).
 
 ```ruby
-customer = PinPayment::Customer.create(email: 'foo@example.com', card_token: params[:card_token])
+customer = PinPayment::Customer.create('foo@example.com', params[:card_token])
 ```
 
 The important information from the returned object is `customer.token`. You
@@ -45,12 +45,12 @@ Now you can create charges.
 
 ```ruby
 charge = PinPayment::Charge.create(
-  customer_token: customer.token, # you can optionally pass a card_token instead
-  email:          customer.email,
-  amount:         1000,
-  currency:       'USD',
-  description:    'Widgets',
-  ip_address:     request.ip
+  customer:    customer, # or you can pass customer.token, either way
+  email:       customer.email,
+  amount:      1000,
+  currency:    'USD', # only AUD and USD are supported by pin.net.au
+  description: 'Widgets',
+  ip_address:  request.ip
 )
 
 if charge.success?
@@ -58,17 +58,81 @@ if charge.success?
 end
 ```
 
+If you don't want to create customer records and just want to create once of
+charges with the credit card data, this is quite simple also. You can do this
+in 2 steps if you like, or 1.
+
+First create the card
+
+```ruby
+card = PinPayment::Card.create(
+  number:           5520000000000000,
+  expiry_month:     5,
+  expiry_year:      2014,
+  cvc:              123,
+  name:             'Roland Robot',
+  address_line1:    '42 Sevenoaks St',
+  address_city:     'Lathlain',
+  address_postcode: 6454,
+  address_state:    'WA',
+  address_country:  'Australia'
+)
+```
+
+Once you have created the card via the API, you will have a `PinPayment::Card`
+object, and you can use the charge example code above and replace the customer
+key in the has with `:card`. The same principle applies here, you can pass
+`:card` into the charge creation as the card object, or as a simple string being
+the card token.
+
+Alternatively, you can skip the card creation step, and pass `:card` to the
+charge creation as a hash itself, it will create the card for you as part of the
+charge process. Example
+
+```ruby
+charge = PinPayment::Charge.create(
+  email:       customer.email,
+  amount:      1000,
+  currency:    'USD', # only AUD and USD are supported by pin.net.au
+  description: 'Widgets',
+  ip_address:  request.ip
+  card:        {
+    number:           5520000000000000,
+    expiry_month:     5,
+    expiry_year:      2014,
+    cvc:              123,
+    name:             'Roland Robot',
+    address_line1:    '42 Sevenoaks St',
+    address_city:     'Lathlain',
+    address_postcode: 6454,
+    address_state:    'WA',
+    address_country:  'Australia'
+  }
+)
+```
+
+You can refund charges as well, either directly on the charge object with
+`charge.refund!` or you can pass a charge object or token directory into
+`PinPayment::Refund.create`
+
+Both the Charge and Customer objects have an `all` method that you can use to
+iterate over your customers and charges. They simply return an array of their
+respective objects.
+
+They also both of course have a `find` method which takes a single argument,
+being the token. For this reason I highly suggest storing `charge.token` as your
+payment reference whenever you are creating payments. As well as storing
+`customer.token` against your customers in your own customer database.
+
 ## TODO
 
-  * `PinPayment::Card` is non existent. I haven't had a use for it myself as yet, it
-    would be easy to build and will do so if I ever see the need. But as per the
-    [guide in the documentation](https://pin.net.au/docs/guides/payment-forms),
-    for a web interface it is much better to have the `card_token` created in
-    the javascript and never have the responsibility of credit card info being
-    sent directly to your server.
-  * Neither of the models support being handed a `card` hash. The API supports
-    doing so, but as above, I've not yet had the need and have always had a
-    `card_token` handy to pass in.
+   * The `all` methods need to deal with pagination.
+   * Implement `PinPayment::Customer.charges`
+   * Implement `PinPayment::Charge.search`
+   * There is more info about a charge in a response than what the API says.
+     E.g. there is info about the fees, refund status, and trasfer status. Need
+     to find out what this data is all about. Since it's undocumented, I am
+     hesitent to implement anything that relies on it as yet.
 
 ## Testing
 
@@ -77,8 +141,15 @@ responses that I know the API gives. We're not really here to test the output of
 the API, I think we can safely assume it will always give the same output for
 the same input, and I don't really want to spam their service every time someone
 runs the test suite. Nor do I want to hard code my test API keys or expect every
-developer to create a pin account. Suggestions on improvement here are welcome
-though.
+developer to create a pin account.
+
+Having said that, you can simply jump into `test/test_helper.rb` and comment out
+the line that sets up fakeweb, then you can uncomment the lines below that and
+put your own pin.net.au test API keys into the code and run the tests. Note
+however that this will create a large amount of customers and charges in your
+test dashboard on pin.net.au.
+
+Suggestions on improvement here are welcome though.
 
 ## Contributing
 
