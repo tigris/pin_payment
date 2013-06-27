@@ -34,11 +34,11 @@ class TestPinCard < MiniTest::Unit::TestCase
 
   def test_new_from_hash
     card = PinPayment::Card.new(nil, @card_hash)
-    assert_equal @card_hash[:address_country], card.address_country
+    assert_kind_of PinPayment::Card, card
   end
 
   def test_to_hash
     card = PinPayment::Card.new(nil, @card_hash)
-    assert_equal @card_hash[:address_country], card.to_hash[:address_country]
+    assert_kind_of Hash, card.to_hash
   end
 end
