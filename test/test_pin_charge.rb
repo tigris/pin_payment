@@ -38,4 +38,11 @@ class TestPinCharge < MiniTest::Unit::TestCase
     assert_kind_of String, charge.card.token
     assert charge.card.token.length > 0
   end
+
+  def test_fetch_all_charges
+    FakeWeb.register_uri(:get, 'https://test-api.pin.net.au/1/charges', body: fixtures['responses']['charge']['all'])
+    charges = PinPayment::Charge.all
+    assert_equal 2, charges.length
+    assert_kind_of PinPayment::Charge, charges.first
+  end
 end

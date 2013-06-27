@@ -10,6 +10,15 @@ module PinPayment
       new(response.delete('token'), response)
     end
 
+    # Fetches all of your charges using the pin API.
+    #
+    # @return [Array<PinPayment::Charge>]
+    # TODO: pagination
+    def self.all
+      response = get(URI.parse(PinPayment.api_url).tap{|uri| uri.path = '/1/charges' })
+      response.map{|x| new(x.delete('token'), x) }
+    end
+
     def refund!
       Refund.create token
     end
