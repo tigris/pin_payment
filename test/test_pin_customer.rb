@@ -56,6 +56,7 @@ class TestPinCustomer < MiniTest::Unit::TestCase
   end
 
   def test_create_customer_with_card_hash
+    FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/customers', body: fixtures['responses']['customer']['create_with_card'])
     card_hash = {
       number:           5520000000000000,
       expiry_month:     5,
@@ -70,6 +71,7 @@ class TestPinCustomer < MiniTest::Unit::TestCase
     }
     customer = PinPayment::Customer.create('roland@pin.net.au', card_hash)
     assert_kind_of PinPayment::Card, customer.card
-    assert_not_nil customer.card.token
+    assert_kind_of String, customer.card.token
+    assert customer.card.token.length > 0
   end
 end
