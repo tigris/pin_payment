@@ -1,5 +1,5 @@
 module PinPayment
-  class Error < Exception
+  class Error < StandardError
 
     def self.create type, description, messages = nil
       klass = case type
