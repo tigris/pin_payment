@@ -112,7 +112,7 @@ charge = PinPayment::Charge.create(
 ```
 
 You can refund charges as well, either directly on the charge object with
-`charge.refund!` or you can pass a charge object or token directory into
+`charge.refund!` or you can pass a charge object or token directly into
 `PinPayment::Refund.create`
 
 Both the Charge and Customer objects have an `all` method that you can use to
