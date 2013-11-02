@@ -95,7 +95,7 @@ charge = PinPayment::Charge.create(
   amount:      1000,
   currency:    'USD', # only AUD and USD are supported by pin.net.au
   description: 'Widgets',
-  ip_address:  request.ip
+  ip_address:  request.ip,
   card:        {
     number:           5520000000000000,
     expiry_month:     5,
