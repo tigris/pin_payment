@@ -1,5 +1,6 @@
 require 'json'
 require 'pin_payment/error'
+require 'net/http'
 
 module PinPayment
   class Base
