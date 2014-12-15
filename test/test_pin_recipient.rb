@@ -34,7 +34,7 @@ class TestPinRecipient < MiniTest::Unit::TestCase
   def test_find_recipient
     recipient = created_recipient
     FakeWeb.register_uri(:get, "https://test-api.pin.net.au/1/recipients/#{recipient.token}", body: fixtures['responses']['recipient']['created'])
-    customer = PinPayment::Recipient.find(recipient.token)
+    recipient = PinPayment::Recipient.find(recipient.token)
     assert_kind_of PinPayment::Recipient, recipient
   end
 

@@ -8,7 +8,7 @@ module PinPayment
     #
     # @param [Hash] recipient_data
     # @option recipient_data [String] :email *required*
-    # @option recipient_data [String] :name
+    # @option recipient_data [String] :name *required*
     # @option recipient_data [String,PinPayment::BankAccount,Hash] :bank_account can be a token, hash or bank account object
     # @return [PinPayment::Recipient]
     def self.create recipient_data
