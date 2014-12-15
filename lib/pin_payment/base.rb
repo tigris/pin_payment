@@ -35,6 +35,7 @@ module PinPayment
           http.set_form_data options
         end
       )
+      # raise response.body.inspect
       begin
         response = JSON.parse(response.body)
       rescue JSON::ParserError => e

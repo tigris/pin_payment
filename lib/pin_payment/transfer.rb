@@ -55,7 +55,7 @@ module PinPayment
       protected
 
       def self.attributes
-        [:token, :type, :object, :amount]
+        [:token, :type, :object, :amount, :recipient]
       end
     end
 

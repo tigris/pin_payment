@@ -46,9 +46,22 @@ def charge_hash
   }
 end
 
+def bank_account_hash
+  {
+    name: "Test Account",
+    bsb: "736032",
+    number: "123456"
+  }
+end
+
 def created_customer
   FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/customers', body: fixtures['responses']['customer']['created'])
   customer = PinPayment::Customer.create('foo@example.com', card_hash)
+end
+
+def created_bank_account
+  FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/bank_accounts', body: fixtures['responses']['bank_account']['success'])
+  customer = PinPayment::BankAccount.create(bank_account_hash)
 end
 
 def created_charge

@@ -1,4 +1,4 @@
---- 
+---
 charge:
   token_already_used: '{"error":"token_already_used","error_description":"Token already used. Card tokens can only be used once, to create a charge or assign a card to a customer."}'
   invalid_amount: '{"error":"invalid_resource","error_description":"One or more parameters were missing or invalid.","messages":[{"param":"amount","code":"amount_invalid","message":"Amount must be an integer"},{"param":"amount","code":"amount_invalid","message":"Amount must be more than 1 USD"}]}'
@@ -18,3 +18,10 @@ refund:
 card:
   success: '{"response":{"token":"card_nytGw7koRg23EEp9NTmz9w","display_number":"XXXX-XXXX-XXXX-0000","scheme":"master","address_line1":"42 Sevenoaks St","address_line2":null,"address_city":"Lathlain","address_postcode":"6454","address_state":"WA","address_country":"Australia"}}'
   invalid: '{"error":"invalid_resource","error_description":"One or more parameters were missing or invalid.","messages":[{"param":"number","code":"number_invalid","message":"Number is not a valid credit card number"}]}'
+bank_account:
+  missing_name: '{"error":"invalid_resource","error_description":"One or more parameters were missing or invalid","messages":[{"param":"name","code":"name_invalid","message":"Name can''t be blank"}]}'
+  missing_bsb: '{"error":"invalid_resource","error_description":"One or more parameters were missing or invalid","messages":[{"param":"bsb","code":"bsb_invalid","message":"BSB can''t be blank"},{"param":"bsb","code":"bsb_invalid","message":"BSB must be 6 numbers"}]}'
+  missing_number: '{"error":"invalid_resource","error_description":"One or more parameters were missing or invalid","messages":[{"param":"number","code":"number_invalid","message":"Number can''t be blank"}]}'
+  success: '{"response":{"token":"ba_zHkOnBEFk2L_AmHfq_PxiQ","name":"Test Account","bsb":"736032","number":"XXX456","bank_name":"Westpac Banking Corporation","branch":"Armadale"},"ip_address":"203.153.240.2"}'
+balance:
+  success: '{"response":{"available":[{"amount":50000,"currency":"AUD"}],"pending":[{"amount":50000,"currency":"AUD"}]}}'
