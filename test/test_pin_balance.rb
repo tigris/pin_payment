@@ -7,7 +7,7 @@ class TestPinBalance < MiniTest::Unit::TestCase
 
   def test_current_balance_success
     FakeWeb.register_uri(:get, 'https://test-api.pin.net.au/1/balance', body: fixtures['responses']['balance']['success'])
-    assert_equal PinPayment::Balance, PinPayment::Balance.current_balance.class
+    assert_kind_of PinPayment::Balance, PinPayment::Balance.current_balance
   end
 
 end

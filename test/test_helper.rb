@@ -68,3 +68,8 @@ def created_charge
   FakeWeb.register_uri(:post, "https://test-api.pin.net.au/1/charges", body: fixtures['responses']['charge']['success'])
   charge = PinPayment::Charge.create(charge_hash)
 end
+
+def created_recipient
+  FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/recipients', body: fixtures['responses']['recipient']['created'])
+  customer = PinPayment::Recipient.create({email: 'foo@example.com', name: "Test Name", bank_account: bank_account_hash})
+end

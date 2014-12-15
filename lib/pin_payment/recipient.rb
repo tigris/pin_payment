@@ -24,7 +24,7 @@ module PinPayment
     # @param [String] email *required*
     # @param [String,PinPayment::BankAccount,Hash] bank_account can be a token, hash or bank account object *required*
     # @return [PinPayment::Recipient]
-    def self.update token, recipient_data, card_or_token = nil
+    def self.update token, email, card_or_token = nil
       new(token).tap{|c| c.update(email, card_or_token) }
     end
 
