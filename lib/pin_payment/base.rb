@@ -51,7 +51,7 @@ module PinPayment
       card  = hash.delete(:card)  if hash[:card]
       token = hash.delete('card_token') if hash['card_token']
       token = hash.delete(:card_token)  if hash[:card_token]
-      if card.is_a?(Card) and token and !card.token
+      if card.is_a?(Card) && token && !card.token
         card.token = token
       elsif card.is_a?(Hash)
         card = Card.new(token || card[:token] || card['token'], card)

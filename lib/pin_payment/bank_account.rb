@@ -20,10 +20,12 @@ module PinPayment
 
     # @return [Hash]
     def to_hash
-      {}.tap{|h| self.class.attributes.each{|k| v = send(k) ; h[k] = v if v }}
+      {}.tap do |hash|
+        self.class.attributes {|attribute| value = send(attribute); hash[attribute] = value if value}
+      end
     end
 
-    protected
+  protected
 
     def self.attributes
       [:token, :name, :bsb, :number, :bank_name]

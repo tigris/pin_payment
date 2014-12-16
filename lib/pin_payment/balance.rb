@@ -17,7 +17,7 @@ module PinPayment
       new(response)
     end
 
-    private
+  private
 
     def self.attributes
       [:available, :pending]

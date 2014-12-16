@@ -39,7 +39,7 @@ module PinPayment
 
     def line_items
       response = self.class.get(URI.parse(PinPayment.api_url).tap{|uri| uri.path = "/1/transfers/#{token}/line_items" })
-      response.map{|x| LineItem.new(x.delete('token'),x) }
+      response.map{|hash| LineItem.new(hash.delete('token'),x) }
     end
 
     protected
