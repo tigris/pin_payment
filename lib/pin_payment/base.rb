@@ -51,7 +51,7 @@ module PinPayment
       card  = hash.delete(:card)  if hash[:card]
       token = hash.delete('card_token') if hash['card_token']
       token = hash.delete(:card_token)  if hash[:card_token]
-      if card.is_a?(Card) and token and !card.token
+      if card.is_a?(Card) && token && !card.token
         card.token = token
       elsif card.is_a?(Hash)
         card = Card.new(token || card[:token] || card['token'], card)
@@ -98,8 +98,27 @@ module PinPayment
       hash
     end
 
+    def self.parse_bank_account_data hash
+      hash      = hash.dup
+      account   = hash.delete('bank_account')  if hash['bank_account']
+      account   = hash.delete(:bank_account)   if hash[:bank_account]
+      token     = hash.delete('bank_account_token')  if hash['bank_account_token']
+      token     = hash.delete(:bank_account_token)   if hash[:bank_account_token]
+      if account.is_a?(BankAccount) and token and !account.token
+        account.token = token
+      elsif account.is_a?(String)
+        account = BankAccount.new(account)
+      elsif account.is_a?(Hash)
+        account = BankAccount.new(nil,account)
+      elsif token
+        account = BankAccount.new(token)
+      end
+      hash['bank_account'] = account if account
+      hash
+    end
+
     def self.parse_object_tokens hash
-      parse_charge_data(parse_customer_data(parse_card_data(hash)))
+      parse_charge_data(parse_customer_data(parse_card_data(parse_bank_account_data(hash))))
     end
 
     def self.parse_options_for_request attributes, options
@@ -112,6 +131,15 @@ module PinPayment
         else
           # Ruby's Net::HTTP#set_form_data doesn't deal with nested hashes :(
           card.to_hash.each{|k,v| options["card[#{k}]"] = v }
+        end
+      end
+
+      if bank_account = options.delete('bank_account')
+        if bank_account.token
+          options['bank_account_token'] = bank_account.token
+        else
+          # Ruby's Net::HTTP#set_form_data doesn't deal with nested hashes :(
+          bank_account.to_hash.each{|k,v| options["bank_account[#{k}]"] = v }
         end
       end
 

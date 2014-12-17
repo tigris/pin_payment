@@ -1,9 +1,13 @@
 require 'pin_payment/base'
+require 'pin_payment/balance'
+require 'pin_payment/bank_account'
 require 'pin_payment/card'
 require 'pin_payment/charge'
 require 'pin_payment/customer'
 require 'pin_payment/error'
 require 'pin_payment/refund'
+require 'pin_payment/recipient'
+require 'pin_payment/transfer'
 require 'pin_payment/version'
 
 module PinPayment
