@@ -46,12 +46,45 @@ def charge_hash
   }
 end
 
+def bank_account_hash
+  {
+    name: "Test Account",
+    bsb: "736032",
+    number: "123456"
+  }
+end
+
+def transfer_hash(recipient_hash)
+  {
+    description: "Transfer of Things",
+    amount: 100,
+    currency: "AUD",
+    recipient: recipient_hash
+  }
+end
+
 def created_customer
   FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/customers', body: fixtures['responses']['customer']['created'])
   customer = PinPayment::Customer.create('foo@example.com', card_hash)
 end
 
+def created_bank_account
+  FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/bank_accounts', body: fixtures['responses']['bank_account']['success'])
+  customer = PinPayment::BankAccount.create(bank_account_hash)
+end
+
 def created_charge
   FakeWeb.register_uri(:post, "https://test-api.pin.net.au/1/charges", body: fixtures['responses']['charge']['success'])
   charge = PinPayment::Charge.create(charge_hash)
+end
+
+def created_recipient
+  FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/recipients', body: fixtures['responses']['recipient']['created'])
+  recipient = PinPayment::Recipient.create({email: 'foo@example.com', name: "Test Name", bank_account: bank_account_hash})
+end
+
+def created_transfer
+  recipient = created_recipient
+  FakeWeb.register_uri(:post, 'https://test-api.pin.net.au/1/transfers', body: fixtures['responses']['transfer']['created'])
+  transfer = PinPayment::Transfer.create(transfer_hash(recipient.token))
 end
