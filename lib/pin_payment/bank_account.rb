@@ -18,11 +18,10 @@ module PinPayment
       new(response.delete('token'), response)
     end
 
+
     # @return [Hash]
     def to_hash
-      {}.tap do |hash|
-        self.class.attributes {|attribute| value = send(attribute); hash[attribute] = value if value}
-      end
+      {}.tap{|h| self.class.attributes.each{|k| v = send(k) ; h[k] = v if v }}
     end
 
   protected
