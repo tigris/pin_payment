@@ -23,6 +23,10 @@ module PinPayment
     def self.get uri, options = {}
       fetch Net::HTTP::Get, uri, options
     end
+    
+    def self.delete uri, options = {}
+      fetch Net::HTTP::Delete, uri, options
+    end
 
     def self.fetch klass, uri, options
       client             = Net::HTTP.new(uri.host, uri.port)
