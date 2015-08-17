@@ -16,6 +16,21 @@ class TestPinCustomer < MiniTest::Unit::TestCase
     customer = created_customer
     assert_kind_of PinPayment::Customer, customer
   end
+  
+  def test_delete_success
+  	customer = created_customer
+    FakeWeb.register_uri(:delete, "https://test-api.pin.net.au/1/customers/#{customer.token}", body: fixtures['responses']['customer']['deleted'])
+    response = PinPayment::Customer.delete_customer(customer.token)
+    assert_empty response
+  end
+  
+  def test_delete_not_found
+  	token = 'none-existing-token'
+    FakeWeb.register_uri(:delete, "https://test-api.pin.net.au/1/customers/#{token}", body: fixtures['responses']['customer']['delete_not_found'])
+    assert_raises PinPayment::Error::ResourceNotFound do
+      PinPayment::Customer.delete_customer(token)
+    end
+  end
 
   def test_direct_update
     customer = created_customer

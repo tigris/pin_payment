@@ -14,6 +14,10 @@ module PinPayment
       response   = post(URI.parse(PinPayment.api_url).tap{|uri| uri.path = '/1/customers' }, options)
       new(response.delete('token'), response)
     end
+    
+    def self.delete_customer(token)
+    	delete(URI.parse(PinPayment.api_url).tap{|uri| uri.path = "/1/customers/#{token}" })
+    end
 
     # Update a customer using the pin API.
     #
