@@ -33,7 +33,7 @@ module PinPayment
       client.use_ssl     = true
       client.verify_mode = OpenSSL::SSL::VERIFY_PEER
       response           = client.request(
-        klass.new(uri.url).tap do |http|
+        klass.new(uri.request_uri).tap do |http|
           http.basic_auth(PinPayment.secret_key, '')
           http['User-Agent'] = "#{self}/#{PinPayment::Version::STRING}"
           http.set_form_data options
