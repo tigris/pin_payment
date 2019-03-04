@@ -24,7 +24,7 @@ module PinPayment
     def self.create card_data
       attributes = self.attributes - [:token, :display_number, :scheme] # fix attributes allowed by POST API
       options    = parse_options_for_request(attributes, card_data)
-      response   = post(URI.parse(PinPayment.api_url).tap{|uri| uri.path = "https://#{uri.path}/1/cards" }, options)
+      response   = post(URI.parse(PinPayment.api_url).tap{|uri| uri.path = '/1/cards' }, options)
       new(response.delete('token'), response)
     end
 
