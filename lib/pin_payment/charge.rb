@@ -52,7 +52,7 @@ module PinPayment
     # @return [Array<PinPayment::Refund>]
     # TODO: pagination
     def refunds
-      response = get(URI.parse(PinPayment.api_url).tap{|uri| uri.path = "/1/charges/#{token}/refunds" })
+      response = Charge.get(URI.parse(PinPayment.api_url).tap{|uri| uri.path = "/1/charges/#{token}/refunds" })
       response.map{|x| Refund.new(x.delete('token'), x) }
     end
 
