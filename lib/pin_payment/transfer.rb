@@ -1,8 +1,8 @@
 module PinPayment
   class Transfer < Base
 
-    attr_accessor :description, :amount, :currency, :recipient, :token
-    protected     :description=, :amount=, :currency=, :recipient=, :token=
+    attr_accessor :description, :amount, :currency, :recipient, :token, :status, :paid_at, :total_debits, :total_credits
+    protected     :description=, :amount=, :currency=, :recipient=, :token=, :status=, :paid_at=, :total_debits=, :total_credits=
 
     # Uses the pin API to create a transfer.
     #
@@ -45,7 +45,7 @@ module PinPayment
     protected
 
     def self.attributes
-      [:token, :description, :amount, :currency, :recipient]
+      [:token, :description, :amount, :currency, :recipient, :status, :paid_at, :total_debits, :total_credits]
     end
 
     class LineItem < Base
