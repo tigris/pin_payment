@@ -15,6 +15,15 @@ module PinPayment
       new(response.delete('token'), response)
     end
 
+    # Fetches a refund using the Pin API.
+    #
+    # @param [String] token the charge token
+    # @return [PinPayment::Refund]
+    def self.find token
+      response = get(URI.parse(PinPayment.api_url).tap{ |uri| uri.path = "/1/refunds/#{token}" })
+      new(response.delete('token'), response)
+    end
+
     # @return [Boolean]
     # TODO: API documentation only shows success as being "null" in the JSON
     # response, so not sure this is possible. All my refunds on the test site
