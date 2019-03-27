@@ -20,6 +20,7 @@ module PinPayment
   end
 
   def self.api_url=(url)
+    url = 'https://' + url unless url.include?('https://')
     @@api_url = url
   end
 
