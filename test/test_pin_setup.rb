@@ -3,7 +3,7 @@ require 'test_helper'
 class TestPinSetup < MiniTest::Unit::TestCase
   def test_setting_public_key
     oldpublic = PinPayment.public_key
-    assert_equal nil, PinPayment.public_key
+    assert_nil PinPayment.public_key
     PinPayment.public_key = 'foo'
     assert_equal 'foo', PinPayment.public_key
     PinPayment.public_key = oldpublic
@@ -11,7 +11,7 @@ class TestPinSetup < MiniTest::Unit::TestCase
 
   def test_setting_secret_key
     oldsecret = PinPayment.secret_key
-    assert_equal nil, PinPayment.secret_key
+    assert_nil PinPayment.secret_key
     PinPayment.secret_key = 'foo'
     assert_equal 'foo', PinPayment.secret_key
     PinPayment.secret_key = oldsecret
