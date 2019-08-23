@@ -19,7 +19,7 @@ class TestPinSetup < MiniTest::Unit::TestCase
 
   def test_api_url
     oldurl = PinPayment.api_url
-    assert_equal 'https://test-api.pin.net.au', PinPayment.api_url
+    assert_equal 'https://test-api.pinpayments.com', PinPayment.api_url
     PinPayment.api_url = 'foo'
     assert_equal 'https://foo', PinPayment.api_url
     PinPayment.api_url = oldurl

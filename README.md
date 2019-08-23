@@ -1,6 +1,6 @@
 # PinPayment
 
-Ruby interface to the http://pin.net.au/ API.
+Ruby interface to the http://pinpayments.com/ API.
 
 ## Installation
 
@@ -17,7 +17,7 @@ Or you can clone the repo and build them gem yourself:
 ## Usage
 
 First you will need to set your `public_key`, `secret_key`, and the `api_url`.
-These can be found on your pin.net.au dashboard (under the "Account" section).
+These can be found on your pinpayments.com dashboard (under the "Account" section).
 If you're using rails, this is best done in an initializer such as
 `config/initializers/pin_payment.rb`, and you will need different keys for different
 environments, e.g. wrap them around `if Rails.env.development?`.
@@ -25,10 +25,10 @@ environments, e.g. wrap them around `if Rails.env.development?`.
 ```ruby
 PinPayment.public_key = 'super nintendo chalmers'
 PinPayment.secret_key = 'purple monkey dishwasher'
-PinPayment.api_url    = 'http://api.pin.net.au' # Live endpoint, the default is the test endpoint
+PinPayment.api_url    = 'http://api.pinpayments.com' # Live endpoint, the default is the test endpoint
 ```
 
-Creating the customer on pin.net.au is only required if you want to bill the
+Creating the customer on pinpayments.com is only required if you want to bill the
 customer in future (e.g. recurring billing, where writing the background
 task is up to you), if you are only doing a single transaction, this step is
 not required (but recommended).
@@ -48,7 +48,7 @@ charge = PinPayment::Charge.create(
   customer:    customer, # or you can pass customer.token, either way
   email:       customer.email,
   amount:      1000,
-  currency:    'USD', # only AUD and USD are supported by pin.net.au
+  currency:    'USD', # only AUD and USD are supported by pinpayments.com
   description: 'Widgets',
   ip_address:  request.remote_ip
 )
@@ -93,7 +93,7 @@ charge process. Example
 charge = PinPayment::Charge.create(
   email:       customer.email,
   amount:      1000,
-  currency:    'USD', # only AUD and USD are supported by pin.net.au
+  currency:    'USD', # only AUD and USD are supported by pinpayments.com
   description: 'Widgets',
   ip_address:  request.ip,
   card:        {
@@ -145,9 +145,9 @@ developer to create a pin account.
 
 Having said that, you can simply jump into `test/test_helper.rb` and comment out
 the line that sets up fakeweb, then you can uncomment the lines below that and
-put your own pin.net.au test API keys into the code and run the tests. Note
+put your own pinpayments.com test API keys into the code and run the tests. Note
 however that this will create a large amount of customers and charges in your
-test dashboard on pin.net.au.
+test dashboard on pinpayments.com.
 
 Suggestions on improvement here are welcome though.
 

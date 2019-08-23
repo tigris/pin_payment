@@ -11,7 +11,7 @@ require 'pin_payment/transfer'
 require 'pin_payment/version'
 
 module PinPayment
-  @@api_url    = 'https://test-api.pin.net.au'
+  @@api_url    = 'https://test-api.pinpayments.com'
   @@secret_key = nil
   @@public_key = nil
 
